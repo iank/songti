@@ -4,13 +4,22 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.LocaleList
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.BufferedReader
+import java.util.*
 
 private const val TAG = "SongTiMainActivity"
+
+/**
+ * TODO: submit text and deal w/ it
+ * TODO: submit text when enter is pressed
+ * TODO: make sure keyboard doesn't cover layout
+ */
 
 /**
  * This activity displays a random vocabulary word in a random font, and presents
@@ -21,18 +30,26 @@ private const val TAG = "SongTiMainActivity"
 class MainActivity : AppCompatActivity() {
     private lateinit var vocab: Vocabulary
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        vocab = Vocabulary(this)
+        // Set preferred language for text input
+        var guessInput: EditText = findViewById(R.id.editTextGuess)
+        guessInput.setImeHintLocales(LocaleList(Locale("zh", "CN")))
 
+        // Load vocabulary and display an initial word
+        vocab = Vocabulary(this)
+        updateWord()
+
+        // Set up button click action
         var rollButton: Button = findViewById(R.id.button)
-        rollButton.setOnClickListener { rollDice() }
+        rollButton.setOnClickListener { updateWord() }
     }
 
     @RequiresApi(Build.VERSION_CODES.O) // XML font support
-    private fun rollDice() {
+    private fun updateWord() {
         // Access vocabulary storage and select a word
         val vocabWord = vocab.roll()
 
