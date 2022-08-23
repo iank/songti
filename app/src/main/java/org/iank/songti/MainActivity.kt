@@ -1,10 +1,15 @@
 package org.iank.songti
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+
+private const val TAG = "SongTiMainActivity"
 
 /**
  * This activity displays a random vocabulary word in a random font, and presents
@@ -13,6 +18,7 @@ import android.widget.Toast
  * proceed to the next word/font at their leisure.
  */
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,22 +27,60 @@ class MainActivity : AppCompatActivity() {
         rollButton.setOnClickListener { rollDice() }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O) // XML font support
     private fun rollDice() {
-        // Create new Dice object with 6 sides and roll it
-        val dice = Dice(6)
-        val diceRoll = dice.roll()
+        // Access vocabulary storage and select a word
+        val vocabWord = Vocabulary().roll()
 
-        // Update the screen with the dice roll
+        // Update screen with new word
         val resultTextView: TextView = findViewById(R.id.textView)
-        resultTextView.text = diceRoll.toString()
+        resultTextView.text = vocabWord
+
+        // Select a font and update style
+        val typeface = Fonts().roll()
+        resultTextView.typeface = resources.getFont(typeface.num)
+
+        // Update typeface name on screen
+        val typefaceNameView: TextView = findViewById(R.id.typefaceNameView)
+        typefaceNameView.text = typeface.name
     }
 }
 
 /**
- * TODO: replace this with vocab/font picker
+ * This class models the available fonts
  */
-class Dice(val numSides: Int) {
-    fun roll(): Int {
-        return (1..numSides).random()
+class Fonts() {
+    fun roll(): SongTiTypeface {
+        val fontFields = R.font::class.java.fields
+        val fonts = arrayListOf<SongTiTypeface>()
+
+        for (field in fontFields) {
+            try {
+                fonts.add(SongTiTypeface(field.name, field.getInt(null)))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return fonts.random()
+    }
+}
+
+/**
+ * Just a name<->Int mapping
+ */
+class SongTiTypeface(val name: String, val num: Int) {
+}
+
+/**
+ * This class models the vocabulary storage
+ *
+ * TODO: database/persistence. Singleton pattern or something
+ * TODO: import from Skritter/text file
+ */
+class Vocabulary() {
+    val vocabList = listOf("宋体", "你好", "推荐", "苹果")
+    fun roll(): String {
+        return vocabList.random()
     }
 }
