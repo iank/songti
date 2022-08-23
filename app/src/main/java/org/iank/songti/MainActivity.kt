@@ -5,9 +5,12 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.LocaleList
+import android.util.Log
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.BufferedReader
@@ -16,9 +19,8 @@ import java.util.*
 private const val TAG = "SongTiMainActivity"
 
 /**
- * TODO: submit text and deal w/ it
- * TODO: submit text when enter is pressed
  * TODO: make sure keyboard doesn't cover layout
+ * TODO: show pinyin on wrong answer (see: TinyPinyin?)
  */
 
 /**
@@ -30,7 +32,6 @@ private const val TAG = "SongTiMainActivity"
 class MainActivity : AppCompatActivity() {
     private lateinit var vocab: Vocabulary
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,10 +46,38 @@ class MainActivity : AppCompatActivity() {
 
         // Set up button click action
         var rollButton: Button = findViewById(R.id.button)
-        rollButton.setOnClickListener { updateWord() }
+        rollButton.setOnClickListener {
+            checkGuess()
+            updateWord()
+            clearInput()
+        }
+
+        // Set up text input action
+        guessInput.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                rollButton.performClick()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O) // XML font support
+    private fun clearInput() {
+        var guessInput: EditText = findViewById(R.id.editTextGuess)
+        guessInput.getText().clear()
+    }
+
+    private fun checkGuess() {
+        var guessInput: EditText = findViewById(R.id.editTextGuess)
+        var answerDisplay: TextView = findViewById(R.id.textView)
+        if (guessInput.text.toString().equals(answerDisplay.text.toString())) {
+            Toast.makeText(this, "correct: ${answerDisplay.text}", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.i(TAG, "wrong: [${guessInput.text}] != [${answerDisplay.text}]")
+            Toast.makeText(this, "wrong: ${guessInput.text} != ${answerDisplay.text}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun updateWord() {
         // Access vocabulary storage and select a word
         val vocabWord = vocab.roll()
