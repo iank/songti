@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.BufferedReader
 import java.util.*
+import net.sourceforge.pinyin4j.PinyinHelper;
 
 private const val TAG = "SongTiMainActivity"
 
@@ -67,6 +68,10 @@ class MainActivity : AppCompatActivity() {
         guessInput.getText().clear()
     }
 
+    /**
+     * TODO: don't queue toasts
+     * TODO: better output display
+     */
     private fun checkGuess() {
         var guessInput: EditText = findViewById(R.id.editTextGuess)
         var answerDisplay: TextView = findViewById(R.id.textView)
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "correct: ${answerDisplay.text}", Toast.LENGTH_SHORT).show()
         } else {
             Log.i(TAG, "wrong: [${guessInput.text}] != [${answerDisplay.text}]")
-            Toast.makeText(this, "wrong: ${guessInput.text} != ${answerDisplay.text}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "wrong: ${guessInput.text} != ${answerDisplay.text} (${toPinyin(answerDisplay.text.toString())})", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -94,6 +99,19 @@ class MainActivity : AppCompatActivity() {
         val typefaceNameView: TextView = findViewById(R.id.typefaceNameView)
         typefaceNameView.text = typeface.name
     }
+}
+
+/**
+ * TODO: accent type
+ * TODO: pick one
+ */
+fun toPinyin(hanzi: String): String {
+    val sb = StringBuilder()
+    for (ch in hanzi.iterator()) {
+        var py = PinyinHelper.toHanyuPinyinStringArray(ch)
+        sb.append(py.joinToString())
+    }
+    return sb.toString()
 }
 
 /**
