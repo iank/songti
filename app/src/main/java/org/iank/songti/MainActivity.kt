@@ -21,7 +21,7 @@ private const val TAG = "SongTiMainActivity"
 
 /**
  * TODO: make sure keyboard doesn't cover layout
- * TODO: show pinyin on wrong answer (see: TinyPinyin?)
+ * TODO: stats per font, weight randomness
  */
 
 /**
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * TODO: don't queue toasts
-     * TODO: better output display
+     * TODO: better output display (pause so I can see char)
      */
     private fun checkGuess() {
         var guessInput: EditText = findViewById(R.id.editTextGuess)
