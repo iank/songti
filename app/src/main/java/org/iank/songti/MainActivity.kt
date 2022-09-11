@@ -65,11 +65,18 @@ class MainActivity : AppCompatActivity() {
         // Set up text input action
         guessInput.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                rollButton.performClick()
+                if (isGuessEmpty()) { nextButton.performClick() }
+                else { rollButton.performClick() }
+
                 return@setOnEditorActionListener true
             }
             false
         }
+    }
+
+    private fun isGuessEmpty(): Boolean {
+        var guessInput: EditText = findViewById(R.id.editTextGuess)
+        return guessInput.getText().isEmpty()
     }
 
     private fun clearInput() {
