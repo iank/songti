@@ -16,6 +16,9 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.BufferedReader
 import java.util.*
 import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
 
 private const val TAG = "SongTiMainActivity"
 
@@ -102,14 +105,22 @@ class MainActivity : AppCompatActivity() {
 }
 
 /**
- * TODO: accent type
- * TODO: pick one
+ * Return a pinyin representation of the input string.
+ *
+ * !! Note that in cases when characters have multiple pronunciations we just return the first
+ * from a list, which could be wrong.
  */
 fun toPinyin(hanzi: String): String {
+    // Set up output format
+    val outputFormat = HanyuPinyinOutputFormat()
+    outputFormat.setToneType(HanyuPinyinToneType.WITH_TONE_MARK)
+    outputFormat.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE)
+
+    // Build pinyin string from input
     val sb = StringBuilder()
     for (ch in hanzi.iterator()) {
-        var py = PinyinHelper.toHanyuPinyinStringArray(ch)
-        sb.append(py.joinToString())
+        var py = PinyinHelper.toHanyuPinyinStringArray(ch, outputFormat)
+        sb.append(py.first())
     }
     return sb.toString()
 }
