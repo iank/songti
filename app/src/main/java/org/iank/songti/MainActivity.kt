@@ -2,7 +2,6 @@ package org.iank.songti
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.LocaleList
@@ -11,12 +10,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContentProviderCompat.requireContext
-import java.io.BufferedReader
 import java.util.*
-import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
@@ -24,7 +19,6 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
 private const val TAG = "SongTiMainActivity"
 
 /**
- * TODO: make sure keyboard doesn't cover layout
  * TODO: stats per font, weight randomness
  */
 
@@ -42,21 +36,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Set preferred language for text input
-        var guessInput: EditText = findViewById(R.id.editTextGuess)
-        guessInput.setImeHintLocales(LocaleList(Locale("zh", "CN")))
+        val guessInput: EditText = findViewById(R.id.editTextGuess)
+        guessInput.imeHintLocales = LocaleList(Locale("zh", "CN"))
 
         // Load vocabulary and display an initial word
         vocab = Vocabulary(this)
         updateWord()
 
         // Set up button click action
-        var rollButton: Button = findViewById(R.id.button)
+        val rollButton: Button = findViewById(R.id.button)
         rollButton.setOnClickListener {
             checkGuess()
             clearInput()
         }
 
-        var nextButton: Button = findViewById(R.id.nextButton)
+        val nextButton: Button = findViewById(R.id.nextButton)
         nextButton.setOnClickListener {
             clearInput()
             clearResult()
@@ -64,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set up text input action
-        guessInput.setOnEditorActionListener { textView, actionId, keyEvent ->
+        guessInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (isGuessEmpty()) { nextButton.performClick() }
                 else { rollButton.performClick() }
@@ -76,27 +70,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isGuessEmpty(): Boolean {
-        var guessInput: EditText = findViewById(R.id.editTextGuess)
-        return guessInput.getText().isEmpty()
+        val guessInput: EditText = findViewById(R.id.editTextGuess)
+        return guessInput.text.isEmpty()
     }
 
     private fun clearInput() {
-        var guessInput: EditText = findViewById(R.id.editTextGuess)
-        guessInput.getText().clear()
+        val guessInput: EditText = findViewById(R.id.editTextGuess)
+        guessInput.text.clear()
     }
 
     private fun clearResult() {
-        var prevResultView: TextView = findViewById(R.id.prevResultView)
+        val prevResultView: TextView = findViewById(R.id.prevResultView)
         prevResultView.text = ""
     }
-    
-    private fun checkGuess() {
-        var guessInput: EditText = findViewById(R.id.editTextGuess)
-        var answerDisplay: TextView = findViewById(R.id.textView)
-        var prevResultView: TextView = findViewById(R.id.prevResultView)
 
-        var resultString = ""
-        if (guessInput.text.toString().equals(answerDisplay.text.toString())) {
+    private fun checkGuess() {
+        val guessInput: EditText = findViewById(R.id.editTextGuess)
+        val answerDisplay: TextView = findViewById(R.id.textView)
+        val prevResultView: TextView = findViewById(R.id.prevResultView)
+
+        val resultString: String
+        if (guessInput.text.toString() == answerDisplay.text.toString()) {
             resultString = "correct: ${answerDisplay.text}"
             prevResultView.setTextColor(Color.rgb(0, 0, 0))
         } else {
@@ -135,13 +129,13 @@ class MainActivity : AppCompatActivity() {
 fun toPinyin(hanzi: String): String {
     // Set up output format
     val outputFormat = HanyuPinyinOutputFormat()
-    outputFormat.setToneType(HanyuPinyinToneType.WITH_TONE_MARK)
-    outputFormat.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE)
+    outputFormat.toneType = HanyuPinyinToneType.WITH_TONE_MARK
+    outputFormat.vCharType = HanyuPinyinVCharType.WITH_U_UNICODE
 
     // Build pinyin string from input
     val sb = StringBuilder()
     for (ch in hanzi.iterator()) {
-        var py = PinyinHelper.toHanyuPinyinStringArray(ch, outputFormat)
+        val py = PinyinHelper.toHanyuPinyinStringArray(ch, outputFormat)
         sb.append(py.first())
     }
     return sb.toString()
@@ -150,7 +144,7 @@ fun toPinyin(hanzi: String): String {
 /**
  * This class models the available fonts
  */
-class Fonts() {
+class Fonts {
     fun roll(): SongTiTypeface {
         val fontFields = R.font::class.java.fields
         val fonts = arrayListOf<SongTiTypeface>()
@@ -170,8 +164,7 @@ class Fonts() {
 /**
  * Just a name<->Int mapping
  */
-class SongTiTypeface(val name: String, val num: Int) {
-}
+class SongTiTypeface(val name: String, val num: Int)
 
 /**
  * This class models the vocabulary storage
@@ -179,7 +172,7 @@ class SongTiTypeface(val name: String, val num: Int) {
  * TODO: import from Skritter
  */
 class Vocabulary(context: Context) {
-    val vocabList: MutableList<String> = mutableListOf()
+    private val vocabList: MutableList<String> = mutableListOf()
 
     init {
         val reader = context.assets.open("words.txt").bufferedReader()
