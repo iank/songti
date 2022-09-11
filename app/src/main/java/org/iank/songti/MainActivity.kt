@@ -52,8 +52,14 @@ class MainActivity : AppCompatActivity() {
         var rollButton: Button = findViewById(R.id.button)
         rollButton.setOnClickListener {
             checkGuess()
-            updateWord()
             clearInput()
+        }
+
+        var nextButton: Button = findViewById(R.id.nextButton)
+        nextButton.setOnClickListener {
+            clearInput()
+            clearResult()
+            updateWord()
         }
 
         // Set up text input action
@@ -69,6 +75,11 @@ class MainActivity : AppCompatActivity() {
     private fun clearInput() {
         var guessInput: EditText = findViewById(R.id.editTextGuess)
         guessInput.getText().clear()
+    }
+
+    private fun clearResult() {
+        var prevResultView: TextView = findViewById(R.id.prevResultView)
+        prevResultView.text = ""
     }
 
     /**

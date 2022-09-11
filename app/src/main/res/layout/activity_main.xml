@@ -60,4 +60,13 @@
         app:layout_constraintStart_toStartOf="@+id/typefaceNameView"
         app:layout_constraintTop_toBottomOf="@+id/typefaceNameView"
         tools:text="result of previous card here" />
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/next"
+        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
