@@ -1,6 +1,7 @@
 package org.iank.songti
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -88,10 +89,7 @@ class MainActivity : AppCompatActivity() {
         var prevResultView: TextView = findViewById(R.id.prevResultView)
         prevResultView.text = ""
     }
-
-    /**
-     * TODO: color output
-     */
+    
     private fun checkGuess() {
         var guessInput: EditText = findViewById(R.id.editTextGuess)
         var answerDisplay: TextView = findViewById(R.id.textView)
@@ -100,10 +98,12 @@ class MainActivity : AppCompatActivity() {
         var resultString = ""
         if (guessInput.text.toString().equals(answerDisplay.text.toString())) {
             resultString = "correct: ${answerDisplay.text}"
+            prevResultView.setTextColor(Color.rgb(0, 0, 0))
         } else {
             Log.i(TAG, "wrong: [${guessInput.text}] != [${answerDisplay.text}]")
             resultString = ("wrong: ${guessInput.text} != ${answerDisplay.text}" +
                             "(${toPinyin(answerDisplay.text.toString())})")
+            prevResultView.setTextColor(Color.rgb(200, 0, 0))
         }
         prevResultView.text = resultString
     }
