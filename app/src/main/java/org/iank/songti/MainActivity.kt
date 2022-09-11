@@ -72,18 +72,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * TODO: don't queue toasts
-     * TODO: better output display (pause so I can see char)
+     * TODO: color output
      */
     private fun checkGuess() {
         var guessInput: EditText = findViewById(R.id.editTextGuess)
         var answerDisplay: TextView = findViewById(R.id.textView)
+        var prevResultView: TextView = findViewById(R.id.prevResultView)
+
+        var resultString = ""
         if (guessInput.text.toString().equals(answerDisplay.text.toString())) {
-            Toast.makeText(this, "correct: ${answerDisplay.text}", Toast.LENGTH_SHORT).show()
+            resultString = "correct: ${answerDisplay.text}"
         } else {
             Log.i(TAG, "wrong: [${guessInput.text}] != [${answerDisplay.text}]")
-            Toast.makeText(this, "wrong: ${guessInput.text} != ${answerDisplay.text} (${toPinyin(answerDisplay.text.toString())})", Toast.LENGTH_SHORT).show()
+            resultString = ("wrong: ${guessInput.text} != ${answerDisplay.text}" +
+                            "(${toPinyin(answerDisplay.text.toString())})")
         }
+        prevResultView.text = resultString
     }
 
     private fun updateWord() {

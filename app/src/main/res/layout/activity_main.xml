@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
         tools:text="@string/songti" />
 
     <Button
@@ -50,4 +51,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/prevResultView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/typefaceNameView"
+        app:layout_constraintTop_toBottomOf="@+id/typefaceNameView"
+        tools:text="result of previous card here" />
 </androidx.constraintlayout.widget.ConstraintLayout>

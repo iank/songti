@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">songti</string>
-    <string name="roll">Roll</string>
+    <string name="roll">check</string>
     <string name="songti">宋体</string>
     <string name="answer">answer</string>
 </resources>
