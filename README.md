@@ -5,4 +5,4 @@ well, doesn't generalize beyond the straightforward fonts that I am used to seei
 So I have trouble reading product labels, signs, movie posters, etc. This app tries to address this by quizzing me on characters that I
 think I know, using a variety of fonts.
 
-![App Screenshot](https://github.com/iank/songti/blob/master/doc/screenshot.png?raw=true)
+![App Screenshot](https://github.com/iank/songti/blob/main/doc/screenshot.png?raw=true)
